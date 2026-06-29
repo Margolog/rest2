@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '3.0.0'
+    id 'io.freefair.lombok' version "9.2.0"
+
+}
+
+group = 'com.log'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation(
+            'com.codeborne:selenide:7.14.0',
+            'org.junit.jupiter:junit-jupiter:5.14.2',
+            'io.qameta.allure:allure-selenide:2.29.1',
+            'io.qameta.allure:allure-junit5:2.29.1',
+            'org.assertj:assertj-core:3.27.7',
+            "io.rest-assured:rest-assured:6.0.0",
+            "io.rest-assured:json-schema-validator:6.0.0",
+            "net.datafaker:datafaker:2.5.4",
+            "tools.jackson.core:jackson-databind:3.1.0"
+    )
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+allure {
+    version = '2.34.0'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+    systemProperties(System.getProperties())
+
+    testLogging {
+        lifecycle {
+            events "started", "skipped", "failed", "standard_error", "standard_out"
+            exceptionFormat "short"
+        }
+    }
+}
