@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static tests.TestData.*;
 
 public class LoginTests extends TestBase{
+
     @Test
     public void successfulLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_PASSWORD);
