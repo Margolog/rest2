@@ -1,11 +1,11 @@
-package testes.examples;
+package tests.examples;
 
 import models.login.LoginBodyModel;
 import models.login.SuccessfulLoginResponseModel;
 import models.login.WrongLoginResponseModel;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import testes.TestBase;
+import tests.TestBase;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;

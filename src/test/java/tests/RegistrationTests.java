@@ -1,4 +1,4 @@
-package testes;
+package tests;
 
 import models.registration.ExistingUserResponseModel;
 import models.registration.RegistrationBodyModel;
@@ -52,7 +52,7 @@ public class RegistrationTests extends TestBase {
         String expectedError = REGISTRATION_EXISTING_USER_ERROR;
         String actualError = secondRegistrationResponse.username().get(0);
         assertThat(actualError).isEqualTo(expectedError);
-    }
+    }}
 
     // todo add more negative tests
 

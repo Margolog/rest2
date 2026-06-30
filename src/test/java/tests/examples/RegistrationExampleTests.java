@@ -1,4 +1,4 @@
-package testes.examples;
+package tests.examples;
 
 import models.registration.lombook.RegistrationBodyLombokModel;
 import models.registration.lombook.RegistrationResponseLombokModel;
