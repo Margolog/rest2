@@ -49,6 +49,7 @@ public class AuthApiClient {
                 .as(WrongLoginResponseModel.class);
     }
 
+
     @Step("Отправка запроса logout")
     public void logout(LogoutBodyModel logoutBody) {
         given(logoutRequestSpec)
