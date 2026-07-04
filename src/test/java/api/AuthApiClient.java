@@ -6,8 +6,7 @@ import models.logout.LogoutBodyModel;
 
 import static io.restassured.RestAssured.given;
 import static specs.login.LoginSpec.*;
-import static specs.logout.LogoutSpec.logoutRequestSpec;
-import static specs.logout.LogoutSpec.successfulLogoutResponseSpec;
+import static specs.logout.LogoutSpec.*;
 
 public class AuthApiClient {
 
@@ -75,5 +74,15 @@ public class AuthApiClient {
                 .post("/auth/logout/")
                 .then()
                 .spec(successfulLogoutResponseSpec);
+    }
+
+    @Step("Отправка запроса logout без токена")
+    public void logoutWithoutToken(LogoutBodyModel logoutBody) {
+        given(logoutRequestSpec)
+                .body(logoutBody)
+                .when()
+                .post("/auth/logout/")
+                .then()
+                .spec(logoutWithoutTokenRequestSpec);
     }
 }

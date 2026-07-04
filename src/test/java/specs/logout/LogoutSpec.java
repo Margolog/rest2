@@ -15,4 +15,9 @@ public class LogoutSpec {
             .log(ALL)
             .expectStatusCode(200)
             .build();
+
+    public static ResponseSpecification logoutWithoutTokenRequestSpec = new ResponseSpecBuilder()
+            .log(ALL)
+            .expectStatusCode(400)
+            .build();
 }
