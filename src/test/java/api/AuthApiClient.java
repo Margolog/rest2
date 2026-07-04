@@ -87,7 +87,6 @@ public class AuthApiClient {
                 .spec(successfulLogoutResponseSpec);
     }
 
-    @Step("Отправка запроса logout без токена")
     public void logoutWithoutToken(LogoutBodyModel logoutBody) {
         given(logoutRequestSpec)
                 .body(logoutBody)
@@ -95,5 +94,14 @@ public class AuthApiClient {
                 .post("/auth/logout/")
                 .then()
                 .spec(logoutWithoutTokenRequestSpec);
+    }
+
+    public void logoutWithWrongToken(LogoutBodyModel logoutBody) {
+        given(logoutRequestSpec)
+                .body(logoutBody)
+                .when()
+                .post("/auth/logout/")
+                .then()
+                .spec(logoutWithWrongTokenRequestSpec);
     }
 }

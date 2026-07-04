@@ -73,8 +73,7 @@ public class LoginTests extends TestBase {
 
         EmptyPasswordAndLoginResponseModel emptyPasswordAndLogin = api.auth.emptyPasswordAndLogin(loginData);
 
-        String expectedDetailError = EMPTY_CREDENTIALS_ERROR;
-        String actualDetailError = emptyPasswordAndLogin.password().get(0);
-        assertThat(actualDetailError).isEqualTo(expectedDetailError);
+        assertThat(emptyPasswordAndLogin.username()).containsExactly(EMPTY_CREDENTIALS_ERROR);
+        assertThat(emptyPasswordAndLogin.password()).containsExactly(EMPTY_CREDENTIALS_ERROR);
     }
 }

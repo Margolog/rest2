@@ -17,6 +17,7 @@ public class TestData {
     public static final String LOGIN_USERNAME = "user_1783169597082";
     public static final String LOGIN_PASSWORD = "pass_1783169597082";
     public static final String LOGIN_WRONG_PASSWORD = "qaguru1234";
+    public static final String WRONG_TOKEN = "wrong token";
 
     public static final String LOGIN_TOKEN_PREFIX = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
     public static final String LOGIN_WRONG_CREDENTIALS_ERROR = "Invalid username or password.";

@@ -1,11 +1,11 @@
 package tests;
 
 import models.login.LoginBodyModel;
+import models.login.SuccessfulLoginResponseModel;
 import models.logout.LogoutBodyModel;
 import org.junit.jupiter.api.Test;
 
-import static tests.TestData.LOGIN_PASSWORD;
-import static tests.TestData.LOGIN_USERNAME;
+import static tests.TestData.*;
 
 public class LogoutTests extends TestBase {
 
@@ -23,4 +23,16 @@ public class LogoutTests extends TestBase {
         LogoutBodyModel logoutData = new LogoutBodyModel("");
         api.auth.logoutWithoutToken(logoutData);
     }
+
+    @Test
+    public void logoutWithWrongTokenTest() {
+        LogoutBodyModel logoutData = new LogoutBodyModel(WRONG_TOKEN);
+        api.auth.logoutWithWrongToken(logoutData);
+
+    }
+
+    //Регистрация с пустыми username и password одновременно
+//Регистрация с password длиннее 128 символов
+//Регистрация без username/password через null
+//Logout с access token вместо refresh token
 }
