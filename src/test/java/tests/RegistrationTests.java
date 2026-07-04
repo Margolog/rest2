@@ -12,24 +12,22 @@ import static tests.TestData.REGISTRATION_IP_REGEXP;
 
 public class RegistrationTests extends TestBase {
 
-    String username;
-    String password;
+    TestData testData;
 
     @BeforeEach
     public void prepareTestData() {
-        username = "user_" + System.currentTimeMillis();
-        password = "pass_" + System.currentTimeMillis();
+        testData = new TestData();
     }
 
     @Test
     public void successfulRegistrationTest() {
-        RegistrationBodyModel registrationData = new RegistrationBodyModel(username, password);
+        RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, testData.password);
 
         SuccessfulRegistrationResponseModel registrationResponse =
                 api.users.register(registrationData);
 
         assertThat(registrationResponse.id()).isGreaterThan(0);
-        assertThat(registrationResponse.username()).isEqualTo(username);
+        assertThat(registrationResponse.username()).isEqualTo(testData.username);
         assertThat(registrationResponse.firstName()).isEqualTo("");
         assertThat(registrationResponse.lastName()).isEqualTo("");
         assertThat(registrationResponse.email()).isEqualTo("");
@@ -39,12 +37,12 @@ public class RegistrationTests extends TestBase {
 
     @Test
     public void existingUserWrongRegistrationTest() {
-        RegistrationBodyModel registrationData = new RegistrationBodyModel(username, password);
+        RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, testData.password);
 
         SuccessfulRegistrationResponseModel firstRegistrationResponse =
                 api.users.register(registrationData);
 
-        assertThat(firstRegistrationResponse.username()).isEqualTo(username);
+        assertThat(firstRegistrationResponse.username()).isEqualTo(testData.username);
 
         ExistingUserResponseModel secondRegistrationResponse =
                 api.users.registerExistingUser(registrationData);
