@@ -1,14 +1,12 @@
 package tests;
-import models.login.EmptyLoginResponseModel;
-import models.login.LoginBodyModel;
-import models.login.SuccessfulLoginResponseModel;
-import models.login.WrongLoginResponseModel;
+
+import models.login.*;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static tests.TestData.*;
 
-public class LoginTests extends TestBase{
+public class LoginTests extends TestBase {
 
     @Test
     public void successfulLoginTest() {
@@ -40,9 +38,19 @@ public class LoginTests extends TestBase{
 
         EmptyLoginResponseModel loginResponse = api.auth.emptyLoginCredentials(loginData);
 
-        String expectedDetailError = USERNAME_EMPTY_CREDENTIALS_ERROR;
-        String actualDetailError = loginResponse.username();
+        String expectedDetailError = EMPTY_CREDENTIALS_ERROR;
+        String actualDetailError = loginResponse.username().get(0);
         assertThat(actualDetailError).isEqualTo(expectedDetailError);
     }
 
+    @Test
+    public void withoutPasswordTest() {
+        LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, "");
+
+        EmptyPasswordResponseModel loginResponse = api.auth.emptyPasswordResponseModel(loginData);
+
+        String expectedDetailError = EMPTY_CREDENTIALS_ERROR;
+        String actualDetailError = loginResponse.password().get(0);
+        assertThat(actualDetailError).isEqualTo(expectedDetailError);
+    }
 }

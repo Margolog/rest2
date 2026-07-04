@@ -1,3 +1,5 @@
 package models.login;
 
-public record EmptyLoginResponseModel(String username) {}
+import java.util.List;
+
+public record EmptyLoginResponseModel(List<String> username) {}

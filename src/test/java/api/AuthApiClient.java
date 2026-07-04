@@ -1,10 +1,7 @@
 package api;
 
 import io.qameta.allure.Step;
-import models.login.EmptyLoginResponseModel;
-import models.login.LoginBodyModel;
-import models.login.SuccessfulLoginResponseModel;
-import models.login.WrongLoginResponseModel;
+import models.login.*;
 import models.logout.LogoutBodyModel;
 
 import static io.restassured.RestAssured.given;
@@ -57,6 +54,17 @@ public class AuthApiClient {
                 .spec(emptyCredentialsLoginResponseSpec)
                 .extract()
                 .as(EmptyLoginResponseModel.class);
+    }
+
+    public EmptyPasswordResponseModel emptyPasswordResponseModel(LoginBodyModel loginBody) {
+        return given(loginRequestSpec)
+                .body(loginBody)
+                .when()
+                .post("/auth/token/")
+                .then()
+                .spec(emptyCredentialsPasswordResponseSpec)
+                .extract()
+                .as(EmptyPasswordResponseModel.class);
     }
 
     @Step("Отправка запроса logout")
