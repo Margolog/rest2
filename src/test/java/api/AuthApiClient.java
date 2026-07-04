@@ -66,6 +66,17 @@ public class AuthApiClient {
                 .as(EmptyPasswordResponseModel.class);
     }
 
+    public EmptyPasswordAndLoginResponseModel emptyPasswordAndLogin(LoginBodyModel loginBody) {
+        return given(loginRequestSpec)
+                .body(loginBody)
+                .when()
+                .post("/auth/token/")
+                .then()
+                .spec(emptyCredentialsResponseSpec)
+                .extract()
+                .as(EmptyPasswordAndLoginResponseModel.class);
+    }
+
     @Step("Отправка запроса logout")
     public void logout(LogoutBodyModel logoutBody) {
         given(logoutRequestSpec)

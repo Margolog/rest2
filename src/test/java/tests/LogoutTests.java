@@ -19,7 +19,7 @@ public class LogoutTests extends TestBase {
     }
 
     @Test
-    public void LogoutTest() {
+    public void logoutWithoutTokenTest() {
         LogoutBodyModel logoutData = new LogoutBodyModel("");
         api.auth.logoutWithoutToken(logoutData);
     }

@@ -8,6 +8,8 @@ import static tests.TestData.*;
 
 public class LoginTests extends TestBase {
 
+    TestData testData = new TestData();
+
     @Test
     public void successfulLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_PASSWORD);
@@ -22,8 +24,19 @@ public class LoginTests extends TestBase {
     }
 
     @Test
-    public void wrongFullCredentialsLoginTest() {
+    public void wrongPasswordLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_WRONG_PASSWORD);
+
+        WrongLoginResponseModel loginResponse = api.auth.loginWrongCredentials(loginData);
+
+        String expectedDetailError = LOGIN_WRONG_CREDENTIALS_ERROR;
+        String actualDetailError = loginResponse.detail();
+        assertThat(actualDetailError).isEqualTo(expectedDetailError);
+    }
+
+    @Test
+    public void wrongUserNameLoginTest() {
+        LoginBodyModel loginData = new LoginBodyModel(testData.username, LOGIN_PASSWORD);
 
         WrongLoginResponseModel loginResponse = api.auth.loginWrongCredentials(loginData);
 
@@ -51,6 +64,17 @@ public class LoginTests extends TestBase {
 
         String expectedDetailError = EMPTY_CREDENTIALS_ERROR;
         String actualDetailError = loginResponse.password().get(0);
+        assertThat(actualDetailError).isEqualTo(expectedDetailError);
+    }
+
+    @Test
+    public void withoutPasswordAndLoginTest() {
+        LoginBodyModel loginData = new LoginBodyModel("", "");
+
+        EmptyPasswordAndLoginResponseModel emptyPasswordAndLogin = api.auth.emptyPasswordAndLogin(loginData);
+
+        String expectedDetailError = EMPTY_CREDENTIALS_ERROR;
+        String actualDetailError = emptyPasswordAndLogin.password().get(0);
         assertThat(actualDetailError).isEqualTo(expectedDetailError);
     }
 }

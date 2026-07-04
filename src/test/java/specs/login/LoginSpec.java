@@ -45,4 +45,13 @@ public class LoginSpec {
                     "schemas/login/empty_password_response_schema.json"))
             .expectBody("password", notNullValue())
             .build();
+
+    public static ResponseSpecification emptyCredentialsResponseSpec = new ResponseSpecBuilder()
+            .log(ALL)
+            .expectStatusCode(400)
+            .expectBody(matchesJsonSchemaInClasspath(
+                    "schemas/login/empty_password_and_login_response_schema.json"))
+            .expectBody("username", notNullValue())
+            .expectBody("password",notNullValue())
+            .build();
 }
