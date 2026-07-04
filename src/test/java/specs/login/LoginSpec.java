@@ -29,4 +29,12 @@ public class LoginSpec {
                     "schemas/login/wrong_login_response_schema.json"))
             .expectBody("detail", notNullValue())
             .build();
+
+    public static ResponseSpecification emptyCredentialsLoginResponseSpec = new ResponseSpecBuilder()
+            .log(ALL)
+            .expectStatusCode(400)
+            .expectBody(matchesJsonSchemaInClasspath(
+                    "schemas/login/empty_login_response_schema.json"))
+            .expectBody("detail", notNullValue())
+            .build();
 }

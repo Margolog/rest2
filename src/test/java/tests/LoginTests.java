@@ -1,4 +1,5 @@
 package tests;
+import models.login.EmptyLoginResponseModel;
 import models.login.LoginBodyModel;
 import models.login.SuccessfulLoginResponseModel;
 import models.login.WrongLoginResponseModel;
@@ -23,7 +24,7 @@ public class LoginTests extends TestBase{
     }
 
     @Test
-    public void wrongCredentialsLoginTest() {
+    public void wrongFullCredentialsLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_WRONG_PASSWORD);
 
         WrongLoginResponseModel loginResponse = api.auth.loginWrongCredentials(loginData);
@@ -32,4 +33,16 @@ public class LoginTests extends TestBase{
         String actualDetailError = loginResponse.detail();
         assertThat(actualDetailError).isEqualTo(expectedDetailError);
     }
+
+    @Test
+    public void withoutUserNameTest() {
+        LoginBodyModel loginData = new LoginBodyModel("", LOGIN_PASSWORD);
+
+        EmptyLoginResponseModel loginResponse = api.auth.emptyLoginCredentials(loginData);
+
+        String expectedDetailError = USERNAME_EMPTY_CREDENTIALS_ERROR;
+        String actualDetailError = loginResponse.username();
+        assertThat(actualDetailError).isEqualTo(expectedDetailError);
+    }
+
 }
