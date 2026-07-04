@@ -1,10 +1,12 @@
 package tests;
 
 import models.login.LoginBodyModel;
-import models.login.SuccessfulLoginResponseModel;
 import models.logout.LogoutBodyModel;
+import models.logout.LogoutWithWrongTokenBodyModel;
+import models.logout.LogoutWithoutTokenBodyModel;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static tests.TestData.*;
 
 public class LogoutTests extends TestBase {
@@ -21,14 +23,22 @@ public class LogoutTests extends TestBase {
     @Test
     public void logoutWithoutTokenTest() {
         LogoutBodyModel logoutData = new LogoutBodyModel("");
-        api.auth.logoutWithoutToken(logoutData);
+
+        LogoutWithoutTokenBodyModel response =
+                api.auth.logoutWithoutToken(logoutData);
+
+        assertThat(response.refresh()).containsExactly(EMPTY_CREDENTIALS_ERROR);
     }
 
     @Test
     public void logoutWithWrongTokenTest() {
         LogoutBodyModel logoutData = new LogoutBodyModel(WRONG_TOKEN);
-        api.auth.logoutWithWrongToken(logoutData);
 
+        LogoutWithWrongTokenBodyModel response =
+                api.auth.logoutWithWrongToken(logoutData);
+
+        assertThat(response.detail()).isEqualTo(INVALID_TOKEN_DETAIL_ERROR);
+        assertThat(response.code()).isEqualTo(INVALID_TOKEN_CODE_ERROR);
     }
 
     //Регистрация с пустыми username и password одновременно

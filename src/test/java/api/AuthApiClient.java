@@ -3,6 +3,8 @@ package api;
 import io.qameta.allure.Step;
 import models.login.*;
 import models.logout.LogoutBodyModel;
+import models.logout.LogoutWithWrongTokenBodyModel;
+import models.logout.LogoutWithoutTokenBodyModel;
 
 import static io.restassured.RestAssured.given;
 import static specs.login.LoginSpec.*;
@@ -87,21 +89,25 @@ public class AuthApiClient {
                 .spec(successfulLogoutResponseSpec);
     }
 
-    public void logoutWithoutToken(LogoutBodyModel logoutBody) {
-        given(logoutRequestSpec)
+    public LogoutWithoutTokenBodyModel logoutWithoutToken(LogoutBodyModel logoutBody) {
+        return given(logoutRequestSpec)
                 .body(logoutBody)
                 .when()
                 .post("/auth/logout/")
                 .then()
-                .spec(logoutWithoutTokenRequestSpec);
+                .spec(logoutWithoutTokenRequestSpec)
+                .extract()
+                .as(LogoutWithoutTokenBodyModel.class);
     }
 
-    public void logoutWithWrongToken(LogoutBodyModel logoutBody) {
-        given(logoutRequestSpec)
+    public LogoutWithWrongTokenBodyModel logoutWithWrongToken(LogoutBodyModel logoutBody) {
+        return given(logoutRequestSpec)
                 .body(logoutBody)
                 .when()
                 .post("/auth/logout/")
                 .then()
-                .spec(logoutWithWrongTokenRequestSpec);
+                .spec(logoutWithWrongTokenRequestSpec)
+                .extract()
+                .as(LogoutWithWrongTokenBodyModel.class);
     }
 }
