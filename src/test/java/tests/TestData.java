@@ -7,8 +7,8 @@ public class TestData {
     public static Faker faker = new Faker();
 
     public String
-            username = faker.name().firstName(),
-            firstName = faker.name().firstName(),
+            username = "user_" + faker.regexify("[A-Za-z0-9]{10}") + "_" + System.currentTimeMillis(),
+    firstName = faker.name().firstName(),
             lastName = faker.name().lastName(),
             email = faker.internet().emailAddress(),
             password = faker.regexify("[A-Za-z0-9]{8}");
