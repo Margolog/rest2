@@ -6,24 +6,43 @@ import models.login.LoginBodyModel;
 import models.logout.LogoutBodyModel;
 import models.logout.LogoutWithWrongTokenBodyModel;
 import models.logout.LogoutWithoutTokenBodyModel;
+import models.registration.RegistrationBodyModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import tests.testData.TestData;
 
+import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static tests.testData.TestData.*;
 
 @Feature("Logout")
 public class LogoutTests extends TestBase {
+    TestData testData = new TestData();
+
 
     @Test
     @Story("Успешный logout")
     @DisplayName("Успешный logout с refresh token")
     public void successfulLogoutTest() {
-        LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_PASSWORD);
-        String refreshToken = api.auth.loginAndGetRefreshToken(loginData);
+        step("Зарегистрировать нового пользователя", () -> {
+            RegistrationBodyModel registrationData =
+                    new RegistrationBodyModel(testData.username, testData.password);
 
-        LogoutBodyModel logoutData = new LogoutBodyModel(refreshToken);
-        api.auth.logout(logoutData);
+            api.users.register(registrationData);
+        });
+
+        String refreshToken = step("Авторизоваться и получить refresh token", () -> {
+            LoginBodyModel loginData =
+                    new LoginBodyModel(testData.username, testData.password);
+
+            return api.auth.loginAndGetRefreshToken(loginData);
+        });
+
+        step("Выполнить logout с refresh token", () -> {
+            LogoutBodyModel logoutData = new LogoutBodyModel(refreshToken);
+
+            api.auth.logout(logoutData);
+        });
     }
 
     @Test
@@ -55,16 +74,28 @@ public class LogoutTests extends TestBase {
     @Story("Негативный кейс на logout")
     @DisplayName("Logout с access token вместо refresh token возвращает ошибку")
     public void logoutWithAccessTokenTest() {
-        LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_PASSWORD);
 
-        String accessToken = api.auth.loginAndGetAccessToken(loginData);
+        step("Зарегистрировать нового пользователя", () -> {
+            RegistrationBodyModel registrationData =
+                    new RegistrationBodyModel(testData.username, testData.password);
 
-        LogoutBodyModel logoutData = new LogoutBodyModel(accessToken);
+            api.users.register(registrationData);
+        });
 
-        LogoutWithWrongTokenBodyModel response =
-                api.auth.logoutWithWrongToken(logoutData);
+        String accessToken = step("Авторизоваться и получить access token", () -> {
+            LoginBodyModel loginData =
+                    new LoginBodyModel(testData.username, testData.password);
 
-        assertThat(response.detail()).isEqualTo(TOKEN_WRONG_TYPE_ERROR);
-        assertThat(response.code()).isEqualTo(INVALID_TOKEN_CODE_ERROR);
+            return api.auth.loginAndGetAccessToken(loginData);
+        });
+
+        step("Выполнить logout с access token", () -> {
+            LogoutBodyModel logoutData = new LogoutBodyModel(accessToken);
+            LogoutWithWrongTokenBodyModel response =
+                    api.auth.logoutWithWrongToken(logoutData);
+
+            assertThat(response.detail()).isEqualTo(TOKEN_WRONG_TYPE_ERROR);
+            assertThat(response.code()).isEqualTo(INVALID_TOKEN_CODE_ERROR);
+        });
     }
 }
