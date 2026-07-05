@@ -7,6 +7,7 @@ import models.logout.LogoutBodyModel;
 import models.logout.LogoutWithWrongTokenBodyModel;
 import models.logout.LogoutWithoutTokenBodyModel;
 import models.registration.RegistrationBodyModel;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.testData.TestData;
@@ -17,8 +18,13 @@ import static tests.testData.TestData.*;
 
 @Feature("Logout")
 public class LogoutTests extends TestBase {
-    TestData testData = new TestData();
 
+    TestData testData;
+
+    @BeforeEach
+    public void prepareTestData() {
+        testData = new TestData();
+    }
 
     @Test
     @Story("Успешный logout")
