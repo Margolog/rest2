@@ -1,12 +1,15 @@
 package tests;
 
+import io.qameta.allure.Feature;
 import models.registration.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static tests.TestData.*;
 
+@Feature("Регистрация")
 public class RegistrationTests extends TestBase {
 
     TestData testData;
@@ -17,6 +20,7 @@ public class RegistrationTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Успешная регистрация нового пользователя")
     public void successfulRegistrationTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, testData.password);
 
@@ -33,6 +37,7 @@ public class RegistrationTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Повторная регистрация существующего пользователя возвращает ошибку")
     public void existingUserWrongRegistrationTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, testData.password);
 
@@ -50,6 +55,7 @@ public class RegistrationTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Регистрация без password возвращает ошибку в поле password")
     public void registrationWithoutPasswordTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, "");
 
@@ -62,6 +68,7 @@ public class RegistrationTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Регистрация без username возвращает ошибку в поле username")
     public void registrationWithoutUsernameTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel("", testData.password);
 
@@ -73,6 +80,7 @@ public class RegistrationTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Регистрация без username и password возвращает две ошибки")
     public void registrationWithoutUsernameAndPasswordTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel("", "");
 
@@ -84,6 +92,7 @@ public class RegistrationTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Регистрация с password длиннее 128 символов возвращает ошибку")
     public void registrationWithLongPasswordTest() {
         RegistrationBodyModel registrationData =
                 new RegistrationBodyModel(testData.username, testData.longPassword);
@@ -95,6 +104,7 @@ public class RegistrationTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Регистрация с null в username и password возвращает две ошибки")
     public void registrationWithNullUsernameAndPasswordTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(null, null);
 

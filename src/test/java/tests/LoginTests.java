@@ -1,16 +1,20 @@
 package tests;
 
+import io.qameta.allure.Feature;
 import models.login.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static tests.TestData.*;
 
+@Feature("Авторизация")
 public class LoginTests extends TestBase {
 
     TestData testData = new TestData();
 
     @Test
+    @DisplayName("Успешный логин возвращает access и refresh токены")
     public void successfulLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_PASSWORD);
 
@@ -24,6 +28,7 @@ public class LoginTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Логин с неверным паролем возвращает ошибку")
     public void wrongPasswordLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_WRONG_PASSWORD);
 
@@ -35,6 +40,7 @@ public class LoginTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Логин с несуществующим username возвращает ошибку")
     public void wrongUserNameLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel(testData.username, LOGIN_PASSWORD);
 
@@ -46,6 +52,7 @@ public class LoginTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Логин без username возвращает ошибку в поле username")
     public void withoutUserNameTest() {
         LoginBodyModel loginData = new LoginBodyModel("", LOGIN_PASSWORD);
 
@@ -57,6 +64,7 @@ public class LoginTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Логин без password возвращает ошибку в поле password")
     public void withoutPasswordTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, "");
 
@@ -68,6 +76,7 @@ public class LoginTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Логин без username и password возвращает две ошибки")
     public void withoutPasswordAndLoginTest() {
         LoginBodyModel loginData = new LoginBodyModel("", "");
 

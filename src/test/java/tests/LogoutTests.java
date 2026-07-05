@@ -1,17 +1,23 @@
 package tests;
 
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import models.login.LoginBodyModel;
 import models.logout.LogoutBodyModel;
 import models.logout.LogoutWithWrongTokenBodyModel;
 import models.logout.LogoutWithoutTokenBodyModel;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static tests.TestData.*;
 
+@Feature("Logout")
 public class LogoutTests extends TestBase {
 
     @Test
+    @Story("Успешный logout")
+    @DisplayName("Успешный logout с refresh token")
     public void successfulLogoutTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_PASSWORD);
         String refreshToken = api.auth.loginAndGetRefreshToken(loginData);
@@ -21,6 +27,8 @@ public class LogoutTests extends TestBase {
     }
 
     @Test
+    @Story("Ошибки logout")
+    @DisplayName("Logout без refresh token возвращает ошибку в поле refresh")
     public void logoutWithoutTokenTest() {
         LogoutBodyModel logoutData = new LogoutBodyModel("");
 
@@ -31,6 +39,8 @@ public class LogoutTests extends TestBase {
     }
 
     @Test
+    @Story("Ошибки logout")
+    @DisplayName("Logout с невалидным token возвращает ошибку token_not_valid")
     public void logoutWithWrongTokenTest() {
         LogoutBodyModel logoutData = new LogoutBodyModel(WRONG_TOKEN);
 
@@ -42,6 +52,8 @@ public class LogoutTests extends TestBase {
     }
 
     @Test
+    @Story("Ошибки logout")
+    @DisplayName("Logout с access token вместо refresh token возвращает ошибку")
     public void logoutWithAccessTokenTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_PASSWORD);
 

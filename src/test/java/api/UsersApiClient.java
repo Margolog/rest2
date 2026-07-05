@@ -1,5 +1,6 @@
 package api;
 
+import io.qameta.allure.Step;
 import models.registration.*;
 
 import static io.restassured.RestAssured.given;
@@ -7,6 +8,7 @@ import static specs.registration.RegistrationSpec.*;
 
 public class UsersApiClient {
 
+    @Step("Зарегистрировать нового пользователя")
     public SuccessfulRegistrationResponseModel register(RegistrationBodyModel body) {
         return given(registrationRequestSpec)
                 .body(body)

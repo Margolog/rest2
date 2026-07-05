@@ -12,6 +12,7 @@ import static specs.logout.LogoutSpec.*;
 
 public class AuthApiClient {
 
+    @Step("Авторизоваться с валидными данными")
     public SuccessfulLoginResponseModel login(LoginBodyModel loginBody) {
         return given(loginRequestSpec)
                 .body(loginBody)
