@@ -5,9 +5,10 @@ import models.registration.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import tests.testData.TestData;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static tests.TestData.*;
+import static tests.testData.TestData.*;
 
 @Feature("Регистрация")
 public class RegistrationTests extends TestBase {
