@@ -41,8 +41,18 @@ public class LogoutTests extends TestBase {
         assertThat(response.code()).isEqualTo(INVALID_TOKEN_CODE_ERROR);
     }
 
-    //Регистрация с пустыми username и password одновременно
-//Регистрация с password длиннее 128 символов
-//Регистрация без username/password через null
-//Logout с access token вместо refresh token
+    @Test
+    public void logoutWithAccessTokenTest() {
+        LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_PASSWORD);
+
+        String accessToken = api.auth.loginAndGetAccessToken(loginData);
+
+        LogoutBodyModel logoutData = new LogoutBodyModel(accessToken);
+
+        LogoutWithWrongTokenBodyModel response =
+                api.auth.logoutWithWrongToken(logoutData);
+
+        assertThat(response.detail()).isEqualTo(TOKEN_WRONG_TYPE_ERROR);
+        assertThat(response.code()).isEqualTo(INVALID_TOKEN_CODE_ERROR);
+    }
 }

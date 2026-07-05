@@ -11,7 +11,8 @@ public class TestData {
     firstName = faker.name().firstName(),
             lastName = faker.name().lastName(),
             email = faker.internet().emailAddress(),
-            password = faker.regexify("[A-Za-z0-9]{8}");
+            password = faker.regexify("[A-Za-z0-9]{8}"),
+    longPassword = faker.regexify("[A-Za-z0-9]{129}");;
 
 
     public static final String LOGIN_USERNAME = "user_1783169597082";
@@ -24,6 +25,11 @@ public class TestData {
     public static final String EMPTY_CREDENTIALS_ERROR = "This field may not be blank.";
     public static final String INVALID_TOKEN_DETAIL_ERROR ="Token is invalid";
     public static final String INVALID_TOKEN_CODE_ERROR ="token_not_valid";
+    public static final String TOKEN_WRONG_TYPE_ERROR = "Token has wrong type";
+
+    public static final String NULL_CREDENTIALS_ERROR = "This field may not be null.";
+    public static final String LONG_PASSWORD_ERROR =
+            "Ensure this field has no more than 128 characters.";
 
     public static final String REGISTRATION_EXISTING_USER_ERROR =
             "A user with that username already exists.";

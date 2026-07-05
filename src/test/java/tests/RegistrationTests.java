@@ -71,6 +71,37 @@ public class RegistrationTests extends TestBase {
         String actualDetailError = registrationWithoutUserName.username().get(0);
         assertThat(actualDetailError).isEqualTo(expectedDetailError);
     }
+
+    @Test
+    public void registrationWithoutUsernameAndPasswordTest() {
+        RegistrationBodyModel registrationData = new RegistrationBodyModel("", "");
+
+        RegistrationWithoutUsernameAndPasswordResponseModel response =
+                api.users.registrationWithoutUsernameAndPassword(registrationData);
+
+        assertThat(response.username()).containsExactly(EMPTY_CREDENTIALS_ERROR);
+        assertThat(response.password()).containsExactly(EMPTY_CREDENTIALS_ERROR);
+    }
+
+    @Test
+    public void registrationWithLongPasswordTest() {
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(testData.username, testData.longPassword);
+
+        RegistrationWithoutPasswordResponseModel response =
+                api.users.registrationWithLongPassword(registrationData);
+
+        assertThat(response.password()).containsExactly(LONG_PASSWORD_ERROR);
+    }
+
+    @Test
+    public void registrationWithNullUsernameAndPasswordTest() {
+        RegistrationBodyModel registrationData = new RegistrationBodyModel(null, null);
+
+        RegistrationWithoutUsernameAndPasswordResponseModel response =
+                api.users.registrationWithoutUsernameAndPassword(registrationData);
+
+        assertThat(response.username()).containsExactly(NULL_CREDENTIALS_ERROR);
+        assertThat(response.password()).containsExactly(NULL_CREDENTIALS_ERROR);
+    }
 }
-
-

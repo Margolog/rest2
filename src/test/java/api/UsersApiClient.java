@@ -35,7 +35,7 @@ public class UsersApiClient {
                 .when()
                 .post("/users/register/")
                 .then()
-                .spec(registrationWithoutPasswordResponseSpec)
+                .spec(registrationPasswordErrorResponseSpec)
                 .extract()
                 .as(RegistrationWithoutPasswordResponseModel.class);
     }
@@ -49,5 +49,28 @@ public class UsersApiClient {
                 .spec(registrationWithoutUserNameResponseSpec)
                 .extract()
                 .as(RegistrationWithoutUserNameResponseModel.class);
+    }
+
+    public RegistrationWithoutUsernameAndPasswordResponseModel registrationWithoutUsernameAndPassword(
+            RegistrationBodyModel body) {
+        return given(registrationRequestSpec)
+                .body(body)
+                .when()
+                .post("/users/register/")
+                .then()
+                .spec(registrationWithoutUsernameAndPasswordResponseSpec)
+                .extract()
+                .as(RegistrationWithoutUsernameAndPasswordResponseModel.class);
+    }
+
+    public RegistrationWithoutPasswordResponseModel registrationWithLongPassword(RegistrationBodyModel body) {
+        return given(registrationRequestSpec)
+                .body(body)
+                .when()
+                .post("/users/register/")
+                .then()
+                .spec(registrationPasswordErrorResponseSpec)
+                .extract()
+                .as(RegistrationWithoutPasswordResponseModel.class);
     }
 }
