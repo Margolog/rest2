@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static tests.TestData.*;
+import static tests.testData.TestData.*;
 
 @Feature("Logout")
 public class LogoutTests extends TestBase {
@@ -27,7 +27,7 @@ public class LogoutTests extends TestBase {
     }
 
     @Test
-    @Story("Ошибки logout")
+    @Story("Негативный кейс на logout")
     @DisplayName("Logout без refresh token возвращает ошибку в поле refresh")
     public void logoutWithoutTokenTest() {
         LogoutBodyModel logoutData = new LogoutBodyModel("");
@@ -39,7 +39,7 @@ public class LogoutTests extends TestBase {
     }
 
     @Test
-    @Story("Ошибки logout")
+    @Story("Негативный кейс на logout")
     @DisplayName("Logout с невалидным token возвращает ошибку token_not_valid")
     public void logoutWithWrongTokenTest() {
         LogoutBodyModel logoutData = new LogoutBodyModel(WRONG_TOKEN);
@@ -52,7 +52,7 @@ public class LogoutTests extends TestBase {
     }
 
     @Test
-    @Story("Ошибки logout")
+    @Story("Негативный кейс на logout")
     @DisplayName("Logout с access token вместо refresh token возвращает ошибку")
     public void logoutWithAccessTokenTest() {
         LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_PASSWORD);

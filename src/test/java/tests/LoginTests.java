@@ -4,9 +4,10 @@ import io.qameta.allure.Feature;
 import models.login.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import tests.testData.TestData;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static tests.TestData.*;
+import static tests.testData.TestData.*;
 
 @Feature("Авторизация")
 public class LoginTests extends TestBase {
@@ -30,7 +31,7 @@ public class LoginTests extends TestBase {
     @Test
     @DisplayName("Логин с неверным паролем возвращает ошибку")
     public void wrongPasswordLoginTest() {
-        LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_WRONG_PASSWORD);
+        LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, WRONG_PASSWORD);
 
         WrongLoginResponseModel loginResponse = api.auth.loginWrongCredentials(loginData);
 
