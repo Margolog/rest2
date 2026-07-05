@@ -2,30 +2,52 @@ package tests;
 
 import io.qameta.allure.Feature;
 import models.login.*;
+import models.registration.RegistrationBodyModel;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.testData.TestData;
 
+import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;
 import static tests.testData.TestData.*;
 
 @Feature("Авторизация")
 public class LoginTests extends TestBase {
 
-    TestData testData = new TestData();
+    TestData testData;
+
+    @BeforeEach
+    public void prepareTestData() {
+        testData = new TestData();
+    }
 
     @Test
     @DisplayName("Успешный логин возвращает access и refresh токены")
     public void successfulLoginTest() {
-        LoginBodyModel loginData = new LoginBodyModel(LOGIN_USERNAME, LOGIN_PASSWORD);
+        step("Зарегистрировать нового пользователя", () -> {
+            RegistrationBodyModel registrationData =
+                    new RegistrationBodyModel(testData.username, testData.password);
 
-        SuccessfulLoginResponseModel loginResponse = api.auth.login(loginData);
+            api.users.register(registrationData);
+        });
 
-        String actualAccess = loginResponse.access();
-        String actualRefresh = loginResponse.refresh();
-        assertThat(actualAccess).startsWith(LOGIN_TOKEN_PREFIX);
-        assertThat(actualRefresh).startsWith(LOGIN_TOKEN_PREFIX);
-        assertThat(actualAccess).isNotEqualTo(actualRefresh);
+        SuccessfulLoginResponseModel loginResponse =
+                step("Авторизоваться новым пользователем", () -> {
+                    LoginBodyModel loginData =
+                            new LoginBodyModel(testData.username, testData.password);
+
+                    return api.auth.login(loginData);
+                });
+
+        step("Проверить access и refresh токены", () -> {
+            String actualAccess = loginResponse.access();
+            String actualRefresh = loginResponse.refresh();
+
+            assertThat(actualAccess).startsWith(LOGIN_TOKEN_PREFIX);
+            assertThat(actualRefresh).startsWith(LOGIN_TOKEN_PREFIX);
+            assertThat(actualAccess).isNotEqualTo(actualRefresh);
+        });
     }
 
     @Test
