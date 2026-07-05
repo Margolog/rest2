@@ -85,7 +85,7 @@ public class UpdateUserTests extends TestBase {
             return api.auth.loginAndGetAccessToken(loginData);
         });
 
-        UpdateUserOnlyUsernameBodyModel updateData = step("Подготовить данные без username", () ->
+        UpdateUserOnlyUsernameBodyModel updateData = step("Подготовить данные только с username", () ->
                 new UpdateUserOnlyUsernameBodyModel(updatedUserData.username)
         );
 

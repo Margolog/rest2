@@ -25,7 +25,6 @@ public class ProfileApiClient {
                 .as(UpdateUserResponseModel.class);
     }
 
-    @Step("Отправить обновление профиля без обязательных полей")
     public UpdateUserRequiredFieldsResponseModel updateUserWithoutRequiredFields(
             String accessToken,
             UpdateUserOnlyUsernameBodyModel body
@@ -41,7 +40,6 @@ public class ProfileApiClient {
                 .as(UpdateUserRequiredFieldsResponseModel.class);
     }
 
-    @Step("Отправить обновление профиля без всех обязательных полей")
     public UpdateUserAllRequiredFieldsResponseModel updateUserWithoutAllRequiredFields(
             String accessToken,
             UpdateUserEmptyBodyModel body
@@ -57,7 +55,6 @@ public class ProfileApiClient {
                 .as(UpdateUserAllRequiredFieldsResponseModel.class);
     }
 
-    @Step("Частично обновить профиль пользователя")
     public UpdateUserResponseModel patchUser(String accessToken, PatchUserBodyModel body) {
         return given(updateUserRequestSpec)
                 .header("Authorization", "Bearer " + accessToken)
@@ -69,10 +66,8 @@ public class ProfileApiClient {
                 .extract()
                 .as(UpdateUserResponseModel.class);
     }
-    public PatchUserEmptyFieldsResponseModel patchUserWithEmptyFields(
-            String accessToken,
-            UpdateUserBodyModel body
-    ) {
+
+    public PatchUserEmptyFieldsResponseModel patchUserWithEmptyFields(String accessToken, UpdateUserBodyModel body) {
         return given(updateUserRequestSpec)
                 .header("Authorization", "Bearer " + accessToken)
                 .body(body)

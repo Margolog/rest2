@@ -60,7 +60,7 @@ public class RegistrationTests extends TestBase {
     public void registrationWithoutPasswordTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, "");
 
-        RegistrationWithoutPasswordResponseModel registrationWithoutPassword =
+        RegistrationPasswordErrorResponseModel registrationWithoutPassword =
                 api.users.registrationWithoutPassword(registrationData);
 
         String expectedDetailError = EMPTY_CREDENTIALS_ERROR;
@@ -98,7 +98,7 @@ public class RegistrationTests extends TestBase {
         RegistrationBodyModel registrationData =
                 new RegistrationBodyModel(testData.username, testData.longPassword);
 
-        RegistrationWithoutPasswordResponseModel response =
+        RegistrationPasswordErrorResponseModel response =
                 api.users.registrationWithLongPassword(registrationData);
 
         assertThat(response.password()).containsExactly(LONG_PASSWORD_ERROR);
