@@ -7,22 +7,22 @@ import models.registration.RegistrationBodyModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import tests.testData.TestData;
+import tests.testData.UserData;
 
 import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;
-import static tests.testData.TestData.*;
+import static tests.testData.UserData.*;
 
 @Feature("Профиль пользователя")
 public class UpdateUserTests extends TestBase {
 
-    TestData registeredUserData;
-    TestData updatedUserData;
+    UserData registeredUserData;
+    UserData updatedUserData;
 
     @BeforeEach
     public void prepareTestData() {
-        registeredUserData = new TestData();
-        updatedUserData = new TestData();
+        registeredUserData = new UserData();
+        updatedUserData = new UserData();
     }
 
 

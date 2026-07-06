@@ -2,7 +2,7 @@ package tests.testData;
 
 import net.datafaker.Faker;
 
-public class TestData {
+public class UserData {
 
     public static Faker faker = new Faker();
 
@@ -12,7 +12,7 @@ public class TestData {
             lastName = faker.name().lastName(),
             email = faker.internet().emailAddress(),
             password = faker.regexify("[A-Za-z0-9]{8}"),
-            longPassword = faker.regexify("[A-Za-z0-9]{129}");
+            longPassword = faker.regexify("[A-Za-z0-9]{129}")
     ;
 
 

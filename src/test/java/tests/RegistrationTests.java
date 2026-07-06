@@ -5,31 +5,31 @@ import models.registration.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import tests.testData.TestData;
+import tests.testData.UserData;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static tests.testData.TestData.*;
+import static tests.testData.UserData.*;
 
 @Feature("Регистрация")
 public class RegistrationTests extends TestBase {
 
-    TestData testData;
+    UserData userData;
 
     @BeforeEach
     public void prepareTestData() {
-        testData = new TestData();
+        userData = new UserData();
     }
 
     @Test
     @DisplayName("Успешная регистрация нового пользователя")
     public void successfulRegistrationTest() {
-        RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, testData.password);
+        RegistrationBodyModel registrationData = new RegistrationBodyModel(userData.username, userData.password);
 
         SuccessfulRegistrationResponseModel registrationResponse =
                 api.users.register(registrationData);
 
         assertThat(registrationResponse.id()).isGreaterThan(0);
-        assertThat(registrationResponse.username()).isEqualTo(testData.username);
+        assertThat(registrationResponse.username()).isEqualTo(userData.username);
         assertThat(registrationResponse.firstName()).isEqualTo("");
         assertThat(registrationResponse.lastName()).isEqualTo("");
         assertThat(registrationResponse.email()).isEqualTo("");
@@ -40,12 +40,12 @@ public class RegistrationTests extends TestBase {
     @Test
     @DisplayName("Повторная регистрация существующего пользователя возвращает ошибку")
     public void existingUserWrongRegistrationTest() {
-        RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, testData.password);
+        RegistrationBodyModel registrationData = new RegistrationBodyModel(userData.username, userData.password);
 
         SuccessfulRegistrationResponseModel firstRegistrationResponse =
                 api.users.register(registrationData);
 
-        assertThat(firstRegistrationResponse.username()).isEqualTo(testData.username);
+        assertThat(firstRegistrationResponse.username()).isEqualTo(userData.username);
 
         ExistingUserResponseModel secondRegistrationResponse =
                 api.users.registerExistingUser(registrationData);
@@ -58,7 +58,7 @@ public class RegistrationTests extends TestBase {
     @Test
     @DisplayName("Регистрация без password возвращает ошибку в поле password")
     public void registrationWithoutPasswordTest() {
-        RegistrationBodyModel registrationData = new RegistrationBodyModel(testData.username, "");
+        RegistrationBodyModel registrationData = new RegistrationBodyModel(userData.username, "");
 
         RegistrationPasswordErrorResponseModel registrationWithoutPassword =
                 api.users.registrationWithoutPassword(registrationData);
@@ -71,7 +71,7 @@ public class RegistrationTests extends TestBase {
     @Test
     @DisplayName("Регистрация без username возвращает ошибку в поле username")
     public void registrationWithoutUsernameTest() {
-        RegistrationBodyModel registrationData = new RegistrationBodyModel("", testData.password);
+        RegistrationBodyModel registrationData = new RegistrationBodyModel("", userData.password);
 
         RegistrationWithoutUserNameResponseModel registrationWithoutUserName =
                 api.users.registrationWithoutUserName(registrationData);
@@ -96,7 +96,7 @@ public class RegistrationTests extends TestBase {
     @DisplayName("Регистрация с password длиннее 128 символов возвращает ошибку")
     public void registrationWithLongPasswordTest() {
         RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(testData.username, testData.longPassword);
+                new RegistrationBodyModel(userData.username, userData.longPassword);
 
         RegistrationPasswordErrorResponseModel response =
                 api.users.registrationWithLongPassword(registrationData);

@@ -6,20 +6,20 @@ import models.registration.RegistrationBodyModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import tests.testData.TestData;
+import tests.testData.UserData;
 
 import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;
-import static tests.testData.TestData.*;
+import static tests.testData.UserData.*;
 
 @Feature("Авторизация")
 public class LoginTests extends TestBase {
 
-    TestData testData;
+    UserData userData;
 
     @BeforeEach
     public void prepareTestData() {
-        testData = new TestData();
+        userData = new UserData();
     }
 
     @Test
@@ -27,7 +27,7 @@ public class LoginTests extends TestBase {
     public void successfulLoginTest() {
         step("Зарегистрировать нового пользователя", () -> {
             RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(testData.username, testData.password);
+                    new RegistrationBodyModel(userData.username, userData.password);
 
             api.users.register(registrationData);
         });
@@ -35,7 +35,7 @@ public class LoginTests extends TestBase {
         SuccessfulLoginResponseModel loginResponse =
                 step("Авторизоваться новым пользователем", () -> {
                     LoginBodyModel loginData =
-                            new LoginBodyModel(testData.username, testData.password);
+                            new LoginBodyModel(userData.username, userData.password);
 
                     return api.auth.login(loginData);
                 });
@@ -65,7 +65,7 @@ public class LoginTests extends TestBase {
     @Test
     @DisplayName("Логин с несуществующим username возвращает ошибку")
     public void wrongUserNameLoginTest() {
-        LoginBodyModel loginData = new LoginBodyModel(testData.username, LOGIN_PASSWORD);
+        LoginBodyModel loginData = new LoginBodyModel(userData.username, LOGIN_PASSWORD);
 
         WrongLoginResponseModel loginResponse = api.auth.loginWrongCredentials(loginData);
 

@@ -10,20 +10,20 @@ import models.registration.RegistrationBodyModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import tests.testData.TestData;
+import tests.testData.UserData;
 
 import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static tests.testData.TestData.*;
+import static tests.testData.UserData.*;
 
 @Feature("Logout")
 public class LogoutTests extends TestBase {
 
-    TestData testData;
+    UserData userData;
 
     @BeforeEach
     public void prepareTestData() {
-        testData = new TestData();
+        userData = new UserData();
     }
 
     @Test
@@ -32,14 +32,14 @@ public class LogoutTests extends TestBase {
     public void successfulLogoutTest() {
         step("Зарегистрировать нового пользователя", () -> {
             RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(testData.username, testData.password);
+                    new RegistrationBodyModel(userData.username, userData.password);
 
             api.users.register(registrationData);
         });
 
         String refreshToken = step("Авторизоваться и получить refresh token", () -> {
             LoginBodyModel loginData =
-                    new LoginBodyModel(testData.username, testData.password);
+                    new LoginBodyModel(userData.username, userData.password);
 
             return api.auth.loginAndGetRefreshToken(loginData);
         });
@@ -83,14 +83,14 @@ public class LogoutTests extends TestBase {
 
         step("Зарегистрировать нового пользователя", () -> {
             RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(testData.username, testData.password);
+                    new RegistrationBodyModel(userData.username, userData.password);
 
             api.users.register(registrationData);
         });
 
         String accessToken = step("Авторизоваться и получить access token", () -> {
             LoginBodyModel loginData =
-                    new LoginBodyModel(testData.username, testData.password);
+                    new LoginBodyModel(userData.username, userData.password);
 
             return api.auth.loginAndGetAccessToken(loginData);
         });
