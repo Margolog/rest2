@@ -20,4 +20,13 @@ public class ClubsSpec {
                     "schemas/clubs/successful_create_clubs_response_schema.json"))
             .expectBody("id", notNullValue())
             .build();
+
+    public static ResponseSpecification successfulGetClubsResponseSpec = new ResponseSpecBuilder()
+            .log(ALL)
+            .expectStatusCode(200)
+            .expectBody(matchesJsonSchemaInClasspath(
+                    "schemas/clubs/successful_get_clubs_response_schema.json"))
+            .expectBody("count", notNullValue())
+            .expectBody("results", notNullValue())
+            .build();
 }

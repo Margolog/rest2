@@ -3,6 +3,7 @@ package tests;
 import io.qameta.allure.Feature;
 import models.clubs.ClubsBodyModel;
 import models.clubs.SuccessfulCreateClubResponseModel;
+import models.clubs.SuccessfulGetClubsResponseModel;
 import models.login.LoginBodyModel;
 import models.registration.RegistrationBodyModel;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,6 +65,54 @@ public class ClubsTests extends TestBase {
             assertThat(clubResponse.members()).contains(clubResponse.owner());
             assertThat(clubResponse.created()).isNotBlank();
             assertThat(clubResponse.modified()).isNull();
+        });
+    }
+
+    @Test
+    @DisplayName("Получение списка клубов возвращает созданный клуб")
+    public void successfulGetClubsTest() {
+        step("Зарегистрировать нового пользователя", () -> {
+            RegistrationBodyModel registrationData =
+                    new RegistrationBodyModel(userData.username, userData.password);
+
+            api.users.register(registrationData);
+        });
+
+        String accessToken = step("Авторизоваться новым пользователем", () -> {
+            LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
+
+            return api.auth.loginAndGetAccessToken(loginData);
+        });
+
+        SuccessfulCreateClubResponseModel createdClub = step("Создать книжный клуб", () -> {
+            ClubsBodyModel clubBody = new ClubsBodyModel(
+                    clubData.bookTitle,
+                    clubData.bookAuthors,
+                    clubData.publicationYear,
+                    clubData.bookDescription,
+                    clubData.telegramChatLink
+            );
+
+            return api.clubs.createClub(accessToken, clubBody);
+        });
+
+        SuccessfulGetClubsResponseModel clubsResponse =
+                step("Получить список книжных клубов", () ->
+                        api.clubs.getClubs(accessToken, clubData.bookTitle));
+
+        step("Проверить, что созданный клуб есть в списке", () -> {
+            assertThat(clubsResponse.count()).isPositive();
+            assertThat(clubsResponse.results())
+                    .anySatisfy(club -> {
+                        assertThat(club.id()).isEqualTo(createdClub.id());
+                        assertThat(club.bookTitle()).isEqualTo(clubData.bookTitle);
+                        assertThat(club.bookAuthors()).isEqualTo(clubData.bookAuthors);
+                        assertThat(club.publicationYear()).isEqualTo(clubData.publicationYear);
+                        assertThat(club.description()).isEqualTo(clubData.bookDescription);
+                        assertThat(club.telegramChatLink()).isEqualTo(clubData.telegramChatLink);
+                        assertThat(club.owner()).isEqualTo(createdClub.owner());
+                        assertThat(club.members()).contains(createdClub.owner());
+                    });
         });
     }
 }
