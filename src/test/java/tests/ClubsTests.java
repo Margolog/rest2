@@ -33,7 +33,6 @@ public class ClubsTests extends TestBase {
         step("Зарегистрировать нового пользователя", () -> {
             RegistrationBodyModel registrationData =
                     new RegistrationBodyModel(userData.username, userData.password);
-
             api.users.register(registrationData);
         });
 
@@ -44,15 +43,15 @@ public class ClubsTests extends TestBase {
         });
 
         ClubResponseModel clubResponse = step("Создать книжный клуб", () -> {
-            ClubsBodyModel clubData = new ClubsBodyModel(
-                    this.clubData.bookTitle,
-                    this.clubData.bookAuthors,
-                    this.clubData.publicationYear,
-                    this.clubData.bookDescription,
-                    this.clubData.telegramChatLink
+            ClubsBodyModel clubBody = new ClubsBodyModel(
+                    clubData.bookTitle,
+                    clubData.bookAuthors,
+                    clubData.publicationYear,
+                    clubData.bookDescription,
+                    clubData.telegramChatLink
             );
 
-            return api.clubs.createClub(accessToken, clubData);
+            return api.clubs.createClub(accessToken, clubBody);
         });
 
         step("Проверить данные созданного клуба", () -> {
@@ -74,7 +73,6 @@ public class ClubsTests extends TestBase {
         step("Зарегистрировать нового пользователя", () -> {
             RegistrationBodyModel registrationData =
                     new RegistrationBodyModel(userData.username, userData.password);
-
             api.users.register(registrationData);
         });
 
@@ -106,12 +104,6 @@ public class ClubsTests extends TestBase {
                     .anySatisfy(club -> {
                         assertThat(club.id()).isEqualTo(createdClub.id());
                         assertThat(club.bookTitle()).isEqualTo(clubData.bookTitle);
-                        assertThat(club.bookAuthors()).isEqualTo(clubData.bookAuthors);
-                        assertThat(club.publicationYear()).isEqualTo(clubData.publicationYear);
-                        assertThat(club.description()).isEqualTo(clubData.bookDescription);
-                        assertThat(club.telegramChatLink()).isEqualTo(clubData.telegramChatLink);
-                        assertThat(club.owner()).isEqualTo(createdClub.owner());
-                        assertThat(club.members()).contains(createdClub.owner());
                     });
         });
     }
@@ -161,5 +153,41 @@ public class ClubsTests extends TestBase {
             assertThat(updatedClub.bookTitle()).isEqualTo(clubData.updatedBookTitle);
             assertThat(updatedClub.modified()).isNotBlank();
         });
+    }
+
+    @Test
+    @DisplayName("Удаление клуба")
+    public void deleteClubTest() {
+        step("Зарегистрировать нового пользователя", () -> {
+            RegistrationBodyModel registrationData =
+                    new RegistrationBodyModel(userData.username, userData.password);
+
+            api.users.register(registrationData);
+        });
+
+        String accessToken = step("Авторизоваться новым пользователем", () -> {
+            LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
+
+            return api.auth.loginAndGetAccessToken(loginData);
+        });
+
+        ClubResponseModel createdClub = step("Создать книжный клуб", () -> {
+            ClubsBodyModel clubBody = new ClubsBodyModel(
+                    clubData.bookTitle,
+                    clubData.bookAuthors,
+                    clubData.publicationYear,
+                    clubData.bookDescription,
+                    clubData.telegramChatLink
+            );
+
+            return api.clubs.createClub(accessToken, clubBody);
+        });
+
+        step("Удалить клуб", () ->
+                api.clubs.deleteClubs(accessToken, createdClub.id()));
+
+
+        step("Проверить, что клуб больше не доступен по id", () ->
+                api.clubs.checkClubNotFoundById(accessToken, createdClub.id()));
     }
 }

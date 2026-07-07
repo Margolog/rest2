@@ -24,10 +24,12 @@ public record ClubResponseModel(
             Integer readPages,
             String created,
             String modified
-    ) {}
+    ) {
+    }
 
     public record UserModel(
             Integer id,
             String username
-    ) {}
+    ) {
+    }
 }
