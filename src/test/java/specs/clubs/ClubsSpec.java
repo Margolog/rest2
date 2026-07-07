@@ -29,4 +29,11 @@ public class ClubsSpec {
             .expectBody("count", notNullValue())
             .expectBody("results", notNullValue())
             .build();
+
+    public static ResponseSpecification successfulUpdateClubsResponseSpec = new ResponseSpecBuilder()
+            .log(ALL)
+            .expectStatusCode(200)
+            .expectBody(matchesJsonSchemaInClasspath(
+                    "schemas/clubs/successful_patch_clubs_response_schema.json"))
+            .build();
 }

@@ -2,7 +2,7 @@ package tests;
 
 import io.qameta.allure.Feature;
 import models.clubs.ClubsBodyModel;
-import models.clubs.SuccessfulCreateClubResponseModel;
+import models.clubs.ClubResponseModel;
 import models.clubs.SuccessfulGetClubsResponseModel;
 import models.login.LoginBodyModel;
 import models.registration.RegistrationBodyModel;
@@ -43,7 +43,7 @@ public class ClubsTests extends TestBase {
             return api.auth.loginAndGetAccessToken(loginData);
         });
 
-        SuccessfulCreateClubResponseModel clubResponse = step("Создать книжный клуб", () -> {
+        ClubResponseModel clubResponse = step("Создать книжный клуб", () -> {
             ClubsBodyModel clubData = new ClubsBodyModel(
                     this.clubData.bookTitle,
                     this.clubData.bookAuthors,
@@ -84,7 +84,7 @@ public class ClubsTests extends TestBase {
             return api.auth.loginAndGetAccessToken(loginData);
         });
 
-        SuccessfulCreateClubResponseModel createdClub = step("Создать книжный клуб", () -> {
+        ClubResponseModel createdClub = step("Создать книжный клуб", () -> {
             ClubsBodyModel clubBody = new ClubsBodyModel(
                     clubData.bookTitle,
                     clubData.bookAuthors,
@@ -113,6 +113,53 @@ public class ClubsTests extends TestBase {
                         assertThat(club.owner()).isEqualTo(createdClub.owner());
                         assertThat(club.members()).contains(createdClub.owner());
                     });
+        });
+    }
+
+    @Test
+    @DisplayName("Обновление названия книги")
+    public void changeBookTitleTest() {
+        step("Зарегистрировать нового пользователя", () -> {
+            RegistrationBodyModel registrationData =
+                    new RegistrationBodyModel(userData.username, userData.password);
+
+            api.users.register(registrationData);
+        });
+
+        String accessToken = step("Авторизоваться новым пользователем", () -> {
+            LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
+
+            return api.auth.loginAndGetAccessToken(loginData);
+        });
+
+        ClubResponseModel createdClub = step("Создать книжный клуб", () -> {
+            ClubsBodyModel clubBody = new ClubsBodyModel(
+                    clubData.bookTitle,
+                    clubData.bookAuthors,
+                    clubData.publicationYear,
+                    clubData.bookDescription,
+                    clubData.telegramChatLink
+            );
+
+            return api.clubs.createClub(accessToken, clubBody);
+        });
+
+        ClubResponseModel updatedClub = step("Обновить название книги", () -> {
+            ClubsBodyModel clubBody = new ClubsBodyModel(
+                    clubData.updatedBookTitle,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+
+            return api.clubs.patchClubs(accessToken, createdClub.id(), clubBody);
+        });
+
+        step("Проверить, что название книги обновилось", () -> {
+            assertThat(updatedClub.id()).isEqualTo(createdClub.id());
+            assertThat(updatedClub.bookTitle()).isEqualTo(clubData.updatedBookTitle);
+            assertThat(updatedClub.modified()).isNotBlank();
         });
     }
 }
