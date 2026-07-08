@@ -11,8 +11,6 @@ import static specs.BaseSpec.baseRequestSpec;
 
 public class LogoutSpec {
 
-    public static RequestSpecification logoutRequestSpec = baseRequestSpec;
-
     public static ResponseSpecification successfulLogoutResponseSpec = new ResponseSpecBuilder()
             .log(ALL)
             .expectStatusCode(200)

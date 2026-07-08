@@ -11,8 +11,6 @@ import static specs.BaseSpec.baseRequestSpec;
 
 public class RegistrationSpec {
 
-    public static RequestSpecification registrationRequestSpec = baseRequestSpec;
-
     public static ResponseSpecification successfulRegistrationResponseSpec = new ResponseSpecBuilder()
             .log(ALL)
             .expectStatusCode(201)

@@ -7,6 +7,7 @@ import models.logout.LogoutWithWrongTokenBodyModel;
 import models.logout.LogoutWithoutTokenBodyModel;
 
 import static io.restassured.RestAssured.given;
+import static specs.BaseSpec.baseRequestSpec;
 import static specs.login.LoginSpec.*;
 import static specs.logout.LogoutSpec.*;
 
@@ -14,7 +15,7 @@ public class AuthApiClient {
 
     @Step("Авторизоваться с валидными данными")
     public SuccessfulLoginResponseModel login(LoginBodyModel loginBody) {
-        return given(loginRequestSpec)
+        return given(baseRequestSpec)
                 .body(loginBody)
                 .when()
                 .post("/auth/token/")
@@ -26,7 +27,7 @@ public class AuthApiClient {
 
     @Step("Авторизация и получение токена")
     public String loginAndGetRefreshToken(LoginBodyModel loginBody) {
-        return given(loginRequestSpec)
+        return given(baseRequestSpec)
                 .body(loginBody)
                 .when()
                 .post("/auth/token/")
@@ -38,7 +39,7 @@ public class AuthApiClient {
 
     @Step("Авторизация и получение access токена")
     public String loginAndGetAccessToken(LoginBodyModel loginBody) {
-        return given(loginRequestSpec)
+        return given(baseRequestSpec)
                 .body(loginBody)
                 .when()
                 .post("/auth/token/")
@@ -49,7 +50,7 @@ public class AuthApiClient {
     }
 
     public WrongLoginResponseModel loginWrongCredentials(LoginBodyModel loginBody) {
-        return given(loginRequestSpec)
+        return given(baseRequestSpec)
                 .body(loginBody)
                 .when()
                 .post("/auth/token/")
@@ -60,7 +61,7 @@ public class AuthApiClient {
     }
 
     public EmptyLoginResponseModel emptyLoginCredentials(LoginBodyModel loginBody) {
-        return given(loginRequestSpec)
+        return given(baseRequestSpec)
                 .body(loginBody)
                 .when()
                 .post("/auth/token/")
@@ -71,7 +72,7 @@ public class AuthApiClient {
     }
 
     public EmptyPasswordResponseModel emptyPasswordResponseModel(LoginBodyModel loginBody) {
-        return given(loginRequestSpec)
+        return given(baseRequestSpec)
                 .body(loginBody)
                 .when()
                 .post("/auth/token/")
@@ -82,7 +83,7 @@ public class AuthApiClient {
     }
 
     public EmptyPasswordAndLoginResponseModel emptyPasswordAndLogin(LoginBodyModel loginBody) {
-        return given(loginRequestSpec)
+        return given(baseRequestSpec)
                 .body(loginBody)
                 .when()
                 .post("/auth/token/")
@@ -94,7 +95,7 @@ public class AuthApiClient {
 
     @Step("Отправка запроса logout")
     public void logout(LogoutBodyModel logoutBody) {
-        given(logoutRequestSpec)
+        given(baseRequestSpec)
                 .body(logoutBody)
                 .when()
                 .post("/auth/logout/")
@@ -103,7 +104,7 @@ public class AuthApiClient {
     }
 
     public LogoutWithoutTokenBodyModel logoutWithoutToken(LogoutBodyModel logoutBody) {
-        return given(logoutRequestSpec)
+        return given(baseRequestSpec)
                 .body(logoutBody)
                 .when()
                 .post("/auth/logout/")
@@ -114,7 +115,7 @@ public class AuthApiClient {
     }
 
     public LogoutWithWrongTokenBodyModel logoutWithWrongToken(LogoutBodyModel logoutBody) {
-        return given(logoutRequestSpec)
+        return given(baseRequestSpec)
                 .body(logoutBody)
                 .when()
                 .post("/auth/logout/")

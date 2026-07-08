@@ -11,7 +11,6 @@ import static specs.BaseSpec.baseRequestSpec;
 
 
 public class LoginSpec {
-    public static RequestSpecification loginRequestSpec = baseRequestSpec;
 
     public static ResponseSpecification successfulLoginResponseSpec = new ResponseSpecBuilder()
             .log(ALL)
