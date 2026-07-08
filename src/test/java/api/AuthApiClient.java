@@ -49,6 +49,7 @@ public class AuthApiClient {
                 .path("access");
     }
 
+    @Step("Авторизоваться с невалидными данными")
     public WrongLoginResponseModel loginWrongCredentials(LoginBodyModel loginBody) {
         return given(baseRequestSpec)
                 .body(loginBody)
@@ -60,6 +61,7 @@ public class AuthApiClient {
                 .as(WrongLoginResponseModel.class);
     }
 
+    @Step("Авторизоваться без username")
     public EmptyLoginResponseModel emptyLoginCredentials(LoginBodyModel loginBody) {
         return given(baseRequestSpec)
                 .body(loginBody)
@@ -71,6 +73,7 @@ public class AuthApiClient {
                 .as(EmptyLoginResponseModel.class);
     }
 
+    @Step("Авторизоваться без password")
     public EmptyPasswordResponseModel emptyPasswordResponseModel(LoginBodyModel loginBody) {
         return given(baseRequestSpec)
                 .body(loginBody)
@@ -82,6 +85,7 @@ public class AuthApiClient {
                 .as(EmptyPasswordResponseModel.class);
     }
 
+    @Step("Авторизоваться без username и password")
     public EmptyPasswordAndLoginResponseModel emptyPasswordAndLogin(LoginBodyModel loginBody) {
         return given(baseRequestSpec)
                 .body(loginBody)
@@ -103,6 +107,7 @@ public class AuthApiClient {
                 .spec(successfulLogoutResponseSpec);
     }
 
+    @Step("Отправить logout без refresh token")
     public LogoutWithoutTokenBodyModel logoutWithoutToken(LogoutBodyModel logoutBody) {
         return given(baseRequestSpec)
                 .body(logoutBody)
@@ -114,6 +119,7 @@ public class AuthApiClient {
                 .as(LogoutWithoutTokenBodyModel.class);
     }
 
+    @Step("Отправить logout с невалидным token")
     public LogoutWithWrongTokenBodyModel logoutWithWrongToken(LogoutBodyModel logoutBody) {
         return given(baseRequestSpec)
                 .body(logoutBody)

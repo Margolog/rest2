@@ -30,32 +30,23 @@ public class UpdateUserTests extends TestBase {
     @Story("Успешное обновление профиля")
     @DisplayName("Пользователь может успешно обновить профиль")
     public void successfulUpdateUserTest() {
-        step("Зарегистрировать нового пользователя", () -> {
-            RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
+        api.users.register(registrationData);
 
-            api.users.register(registrationData);
-        });
+        LoginBodyModel loginData =
+                new LoginBodyModel(registeredUserData.username, registeredUserData.password);
 
-        String accessToken = step("Авторизоваться и получить access token", () -> {
-            LoginBodyModel loginData =
-                    new LoginBodyModel(registeredUserData.username, registeredUserData.password);
+        String accessToken = api.auth.loginAndGetAccessToken(loginData);
 
-            return api.auth.loginAndGetAccessToken(loginData);
-        });
-
-        UpdateUserBodyModel updateData = step("Подготовить данные для обновления профиля", () ->
-                new UpdateUserBodyModel(
-                        updatedUserData.username,
-                        updatedUserData.firstName,
-                        updatedUserData.lastName,
-                        updatedUserData.email
-                )
+        UpdateUserBodyModel updateData = new UpdateUserBodyModel(
+                updatedUserData.username,
+                updatedUserData.firstName,
+                updatedUserData.lastName,
+                updatedUserData.email
         );
 
-        UpdateUserResponseModel response = step("Отправить PUT-запрос на обновление профиля", () ->
-                api.profile.updateUser(accessToken, updateData)
-        );
+        UpdateUserResponseModel response = api.profile.updateUser(accessToken, updateData);
 
         step("Проверить, что профиль обновился", () -> {
             assertThat(response.id()).isGreaterThan(0);
@@ -71,28 +62,20 @@ public class UpdateUserTests extends TestBase {
     @Story("Валидация обязательных полей")
     @DisplayName("Обновление профиля только с username возвращает ошибки firstName, lastName и email")
     public void updateUserOnlyWithUsernameTest() {
-        step("Зарегистрировать нового пользователя", () -> {
-            RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
+        api.users.register(registrationData);
 
-            api.users.register(registrationData);
-        });
+        LoginBodyModel loginData =
+                new LoginBodyModel(registeredUserData.username, registeredUserData.password);
 
-        String accessToken = step("Авторизоваться и получить access token", () -> {
-            LoginBodyModel loginData =
-                    new LoginBodyModel(registeredUserData.username, registeredUserData.password);
+        String accessToken = api.auth.loginAndGetAccessToken(loginData);
 
-            return api.auth.loginAndGetAccessToken(loginData);
-        });
-
-        UpdateUserOnlyUsernameBodyModel updateData = step("Подготовить данные только с username", () ->
-                new UpdateUserOnlyUsernameBodyModel(updatedUserData.username)
-        );
+        UpdateUserOnlyUsernameBodyModel updateData =
+                new UpdateUserOnlyUsernameBodyModel(updatedUserData.username);
 
         UpdateUserRequiredFieldsResponseModel response =
-                step("Отправить PUT-запрос без firstName, lastName и email", () ->
-                        api.profile.updateUserWithoutRequiredFields(accessToken, updateData)
-                );
+                api.profile.updateUserWithoutRequiredFields(accessToken, updateData);
 
         step("Проверить ошибки обязательных полей", () -> {
             assertThat(response.firstName()).containsExactly(REQUIRED_FIELD_ERROR);
@@ -105,28 +88,19 @@ public class UpdateUserTests extends TestBase {
     @Story("Валидация обязательных полей")
     @DisplayName("Обновление профиля с пустым JSON возвращает ошибки всех обязательных полей")
     public void updateUserWithoutAllRequiredFieldsTest() {
-        step("Зарегистрировать нового пользователя", () -> {
-            RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
+        api.users.register(registrationData);
 
-            api.users.register(registrationData);
-        });
+        LoginBodyModel loginData =
+                new LoginBodyModel(registeredUserData.username, registeredUserData.password);
 
-        String accessToken = step("Авторизоваться и получить access token", () -> {
-            LoginBodyModel loginData =
-                    new LoginBodyModel(registeredUserData.username, registeredUserData.password);
+        String accessToken = api.auth.loginAndGetAccessToken(loginData);
 
-            return api.auth.loginAndGetAccessToken(loginData);
-        });
-
-        UpdateUserEmptyBodyModel updateData = step("Подготовить пустой JSON для обновления профиля",
-                UpdateUserEmptyBodyModel::new
-        );
+        UpdateUserEmptyBodyModel updateData = new UpdateUserEmptyBodyModel();
 
         UpdateUserAllRequiredFieldsResponseModel response =
-                step("Отправить PUT-запрос без username, firstName, lastName и email", () ->
-                        api.profile.updateUserWithoutAllRequiredFields(accessToken, updateData)
-                );
+                api.profile.updateUserWithoutAllRequiredFields(accessToken, updateData);
 
         step("Проверить ошибки всех обязательных полей", () -> {
             assertThat(response.username()).containsExactly(REQUIRED_FIELD_ERROR);
@@ -140,27 +114,19 @@ public class UpdateUserTests extends TestBase {
     @Story("Успешное частичное обновление профиля")
     @DisplayName("PATCH обновляет username пользователя")
     public void patchUserNameTest() {
-        step("Зарегистрировать нового пользователя", () -> {
-            RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
+        api.users.register(registrationData);
 
-            api.users.register(registrationData);
-        });
+        LoginBodyModel loginData =
+                new LoginBodyModel(registeredUserData.username, registeredUserData.password);
 
-        String accessToken = step("Авторизоваться и получить access token", () -> {
-            LoginBodyModel loginData =
-                    new LoginBodyModel(registeredUserData.username, registeredUserData.password);
+        String accessToken = api.auth.loginAndGetAccessToken(loginData);
 
-            return api.auth.loginAndGetAccessToken(loginData);
-        });
+        PatchUserBodyModel patchData =
+                new PatchUserBodyModel(updatedUserData.username, null, null, null);
 
-        PatchUserBodyModel patchData = step("Подготовить новый username", () ->
-                new PatchUserBodyModel(updatedUserData.username, null, null, null)
-        );
-
-        UpdateUserResponseModel response = step("Отправить PATCH-запрос на обновление username", () ->
-                api.profile.patchUser(accessToken, patchData)
-        );
+        UpdateUserResponseModel response = api.profile.patchUser(accessToken, patchData);
 
         step("Проверить, что username обновился", () ->
                 assertThat(response.username()).isEqualTo(updatedUserData.username)
@@ -172,28 +138,19 @@ public class UpdateUserTests extends TestBase {
     @Story("Валидация пустых значений")
     @DisplayName("PATCH профиля с пустым username возвращает ошибку")
     public void patchUserWithEmptyFieldsTest() {
-        step("Зарегистрировать нового пользователя", () -> {
-            RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
+        api.users.register(registrationData);
 
-            api.users.register(registrationData);
-        });
+        LoginBodyModel loginData =
+                new LoginBodyModel(registeredUserData.username, registeredUserData.password);
 
-        String accessToken = step("Авторизоваться и получить access token", () -> {
-            LoginBodyModel loginData =
-                    new LoginBodyModel(registeredUserData.username, registeredUserData.password);
+        String accessToken = api.auth.loginAndGetAccessToken(loginData);
 
-            return api.auth.loginAndGetAccessToken(loginData);
-        });
-
-        UpdateUserBodyModel updateData = step("Подготовить данные с пустыми значениями", () ->
-                new UpdateUserBodyModel("", "", "", "")
-        );
+        UpdateUserBodyModel updateData = new UpdateUserBodyModel("", "", "", "");
 
         PatchUserEmptyFieldsResponseModel response =
-                step("Отправить PATCH-запрос с пустым username", () ->
-                        api.profile.patchUserWithEmptyFields(accessToken, updateData)
-                );
+                api.profile.patchUserWithEmptyFields(accessToken, updateData);
 
         step("Проверить ошибку в поле username", () ->
                 assertThat(response.username()).containsExactly(EMPTY_CREDENTIALS_ERROR)

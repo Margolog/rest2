@@ -25,20 +25,15 @@ public class LoginTests extends TestBase {
     @Test
     @DisplayName("Успешный логин возвращает access и refresh токены")
     public void successfulLoginTest() {
-        step("Зарегистрировать нового пользователя", () -> {
-            RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(userData.username, userData.password);
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(userData.username, userData.password);
+        api.users.register(registrationData);
 
-            api.users.register(registrationData);
-        });
+        LoginBodyModel loginData =
+                new LoginBodyModel(userData.username, userData.password);
 
         SuccessfulLoginResponseModel loginResponse =
-                step("Авторизоваться новым пользователем", () -> {
-                    LoginBodyModel loginData =
-                            new LoginBodyModel(userData.username, userData.password);
-
-                    return api.auth.login(loginData);
-                });
+                api.auth.login(loginData);
 
         step("Проверить access и refresh токены", () -> {
             String actualAccess = loginResponse.access();

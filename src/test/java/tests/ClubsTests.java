@@ -30,29 +30,22 @@ public class ClubsTests extends TestBase {
     @Test
     @DisplayName("Успешное создание клуба возвращает данные созданного клуба")
     public void successfulCreateClubTest() {
-        step("Зарегистрировать нового пользователя", () -> {
-            RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(userData.username, userData.password);
-            api.users.register(registrationData);
-        });
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(userData.username, userData.password);
+        api.users.register(registrationData);
 
-        String accessToken = step("Авторизоваться новым пользователем", () -> {
-            LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
+        LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
+        String accessToken = api.auth.loginAndGetAccessToken(loginData);
 
-            return api.auth.loginAndGetAccessToken(loginData);
-        });
+        ClubsBodyModel clubBody = new ClubsBodyModel(
+                clubData.bookTitle,
+                clubData.bookAuthors,
+                clubData.publicationYear,
+                clubData.bookDescription,
+                clubData.telegramChatLink
+        );
 
-        ClubResponseModel clubResponse = step("Создать книжный клуб", () -> {
-            ClubsBodyModel clubBody = new ClubsBodyModel(
-                    clubData.bookTitle,
-                    clubData.bookAuthors,
-                    clubData.publicationYear,
-                    clubData.bookDescription,
-                    clubData.telegramChatLink
-            );
-
-            return api.clubs.createClub(accessToken, clubBody);
-        });
+        ClubResponseModel clubResponse = api.clubs.createClub(accessToken, clubBody);
 
         step("Проверить данные созданного клуба", () -> {
             assertThat(clubResponse.bookTitle()).isEqualTo(clubData.bookTitle);
@@ -70,33 +63,25 @@ public class ClubsTests extends TestBase {
     @Test
     @DisplayName("Получение списка клубов возвращает созданный клуб")
     public void successfulGetClubsTest() {
-        step("Зарегистрировать нового пользователя", () -> {
-            RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(userData.username, userData.password);
-            api.users.register(registrationData);
-        });
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(userData.username, userData.password);
+        api.users.register(registrationData);
 
-        String accessToken = step("Авторизоваться новым пользователем", () -> {
-            LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
+        LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
+        String accessToken = api.auth.loginAndGetAccessToken(loginData);
 
-            return api.auth.loginAndGetAccessToken(loginData);
-        });
+        ClubsBodyModel clubBody = new ClubsBodyModel(
+                clubData.bookTitle,
+                clubData.bookAuthors,
+                clubData.publicationYear,
+                clubData.bookDescription,
+                clubData.telegramChatLink
+        );
 
-        ClubResponseModel createdClub = step("Создать книжный клуб", () -> {
-            ClubsBodyModel clubBody = new ClubsBodyModel(
-                    clubData.bookTitle,
-                    clubData.bookAuthors,
-                    clubData.publicationYear,
-                    clubData.bookDescription,
-                    clubData.telegramChatLink
-            );
-
-            return api.clubs.createClub(accessToken, clubBody);
-        });
+        ClubResponseModel createdClub = api.clubs.createClub(accessToken, clubBody);
 
         SuccessfulGetClubsResponseModel clubsResponse =
-                step("Получить список книжных клубов", () ->
-                        api.clubs.getClubs(accessToken, clubData.bookTitle));
+                api.clubs.getClubs(accessToken, clubData.bookTitle);
 
         step("Проверить, что созданный клуб есть в списке", () -> {
             assertThat(clubsResponse.count()).isPositive();
@@ -111,42 +96,33 @@ public class ClubsTests extends TestBase {
     @Test
     @DisplayName("Обновление названия книги")
     public void changeBookTitleTest() {
-        step("Зарегистрировать нового пользователя", () -> {
-            RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(userData.username, userData.password);
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(userData.username, userData.password);
 
-            api.users.register(registrationData);
-        });
+        api.users.register(registrationData);
 
-        String accessToken = step("Авторизоваться новым пользователем", () -> {
-            LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
+        LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
+        String accessToken = api.auth.loginAndGetAccessToken(loginData);
 
-            return api.auth.loginAndGetAccessToken(loginData);
-        });
+        ClubsBodyModel clubBody = new ClubsBodyModel(
+                clubData.bookTitle,
+                clubData.bookAuthors,
+                clubData.publicationYear,
+                clubData.bookDescription,
+                clubData.telegramChatLink
+        );
 
-        ClubResponseModel createdClub = step("Создать книжный клуб", () -> {
-            ClubsBodyModel clubBody = new ClubsBodyModel(
-                    clubData.bookTitle,
-                    clubData.bookAuthors,
-                    clubData.publicationYear,
-                    clubData.bookDescription,
-                    clubData.telegramChatLink
-            );
+        ClubResponseModel createdClub = api.clubs.createClub(accessToken, clubBody);
 
-            return api.clubs.createClub(accessToken, clubBody);
-        });
+        ClubsBodyModel updatedClubBody = new ClubsBodyModel(
+                clubData.updatedBookTitle,
+                null,
+                null,
+                null,
+                null
+        );
 
-        ClubResponseModel updatedClub = step("Обновить название книги", () -> {
-            ClubsBodyModel clubBody = new ClubsBodyModel(
-                    clubData.updatedBookTitle,
-                    null,
-                    null,
-                    null,
-                    null
-            );
-
-            return api.clubs.patchClubs(accessToken, createdClub.id(), clubBody);
-        });
+        ClubResponseModel updatedClub = api.clubs.patchClubs(accessToken, createdClub.id(), updatedClubBody);
 
         step("Проверить, что название книги обновилось", () -> {
             assertThat(updatedClub.id()).isEqualTo(createdClub.id());
@@ -158,36 +134,25 @@ public class ClubsTests extends TestBase {
     @Test
     @DisplayName("Удаление клуба")
     public void deleteClubTest() {
-        step("Зарегистрировать нового пользователя", () -> {
-            RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(userData.username, userData.password);
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(userData.username, userData.password);
 
-            api.users.register(registrationData);
-        });
+        api.users.register(registrationData);
 
-        String accessToken = step("Авторизоваться новым пользователем", () -> {
-            LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
+        LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
+        String accessToken = api.auth.loginAndGetAccessToken(loginData);
 
-            return api.auth.loginAndGetAccessToken(loginData);
-        });
+        ClubsBodyModel clubBody = new ClubsBodyModel(
+                clubData.bookTitle,
+                clubData.bookAuthors,
+                clubData.publicationYear,
+                clubData.bookDescription,
+                clubData.telegramChatLink
+        );
 
-        ClubResponseModel createdClub = step("Создать книжный клуб", () -> {
-            ClubsBodyModel clubBody = new ClubsBodyModel(
-                    clubData.bookTitle,
-                    clubData.bookAuthors,
-                    clubData.publicationYear,
-                    clubData.bookDescription,
-                    clubData.telegramChatLink
-            );
+        ClubResponseModel createdClub = api.clubs.createClub(accessToken, clubBody);
 
-            return api.clubs.createClub(accessToken, clubBody);
-        });
-
-        step("Удалить клуб", () ->
-                api.clubs.deleteClubs(accessToken, createdClub.id()));
-
-
-        step("Проверить, что клуб больше не доступен по id", () ->
-                api.clubs.checkClubNotFoundById(accessToken, createdClub.id()));
+        api.clubs.deleteClubs(accessToken, createdClub.id());
+        api.clubs.checkClubNotFoundById(accessToken, createdClub.id());
     }
 }

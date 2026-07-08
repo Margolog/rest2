@@ -30,25 +30,17 @@ public class LogoutTests extends TestBase {
     @Story("Успешный logout")
     @DisplayName("Успешный logout с refresh token")
     public void successfulLogoutTest() {
-        step("Зарегистрировать нового пользователя", () -> {
-            RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(userData.username, userData.password);
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(userData.username, userData.password);
+        api.users.register(registrationData);
 
-            api.users.register(registrationData);
-        });
+        LoginBodyModel loginData =
+                new LoginBodyModel(userData.username, userData.password);
 
-        String refreshToken = step("Авторизоваться и получить refresh token", () -> {
-            LoginBodyModel loginData =
-                    new LoginBodyModel(userData.username, userData.password);
+        String refreshToken = api.auth.loginAndGetRefreshToken(loginData);
 
-            return api.auth.loginAndGetRefreshToken(loginData);
-        });
-
-        step("Выполнить logout с refresh token", () -> {
-            LogoutBodyModel logoutData = new LogoutBodyModel(refreshToken);
-
-            api.auth.logout(logoutData);
-        });
+        LogoutBodyModel logoutData = new LogoutBodyModel(refreshToken);
+        api.auth.logout(logoutData);
     }
 
     @Test
@@ -60,7 +52,8 @@ public class LogoutTests extends TestBase {
         LogoutWithoutTokenBodyModel response =
                 api.auth.logoutWithoutToken(logoutData);
 
-        assertThat(response.refresh()).containsExactly(EMPTY_CREDENTIALS_ERROR);
+        step("Проверить ошибку в поле refresh", () ->
+                assertThat(response.refresh()).containsExactly(EMPTY_CREDENTIALS_ERROR));
     }
 
     @Test
@@ -72,34 +65,30 @@ public class LogoutTests extends TestBase {
         LogoutWithWrongTokenBodyModel response =
                 api.auth.logoutWithWrongToken(logoutData);
 
-        assertThat(response.detail()).isEqualTo(INVALID_TOKEN_DETAIL_ERROR);
-        assertThat(response.code()).isEqualTo(INVALID_TOKEN_CODE_ERROR);
+        step("Проверить ошибку невалидного token", () -> {
+            assertThat(response.detail()).isEqualTo(INVALID_TOKEN_DETAIL_ERROR);
+            assertThat(response.code()).isEqualTo(INVALID_TOKEN_CODE_ERROR);
+        });
     }
 
     @Test
     @Story("Негативный кейс на logout")
     @DisplayName("Logout с access token вместо refresh token возвращает ошибку")
     public void logoutWithAccessTokenTest() {
+        RegistrationBodyModel registrationData =
+                new RegistrationBodyModel(userData.username, userData.password);
+        api.users.register(registrationData);
 
-        step("Зарегистрировать нового пользователя", () -> {
-            RegistrationBodyModel registrationData =
-                    new RegistrationBodyModel(userData.username, userData.password);
+        LoginBodyModel loginData =
+                new LoginBodyModel(userData.username, userData.password);
 
-            api.users.register(registrationData);
-        });
+        String accessToken = api.auth.loginAndGetAccessToken(loginData);
 
-        String accessToken = step("Авторизоваться и получить access token", () -> {
-            LoginBodyModel loginData =
-                    new LoginBodyModel(userData.username, userData.password);
+        LogoutBodyModel logoutData = new LogoutBodyModel(accessToken);
+        LogoutWithWrongTokenBodyModel response =
+                api.auth.logoutWithWrongToken(logoutData);
 
-            return api.auth.loginAndGetAccessToken(loginData);
-        });
-
-        step("Выполнить logout с access token", () -> {
-            LogoutBodyModel logoutData = new LogoutBodyModel(accessToken);
-            LogoutWithWrongTokenBodyModel response =
-                    api.auth.logoutWithWrongToken(logoutData);
-
+        step("Проверить ошибку token wrong type", () -> {
             assertThat(response.detail()).isEqualTo(TOKEN_WRONG_TYPE_ERROR);
             assertThat(response.code()).isEqualTo(INVALID_TOKEN_CODE_ERROR);
         });

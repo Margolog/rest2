@@ -21,6 +21,7 @@ public class UsersApiClient {
                 .as(SuccessfulRegistrationResponseModel.class);
     }
 
+    @Step("Зарегистрировать существующего пользователя")
     public ExistingUserResponseModel registerExistingUser(RegistrationBodyModel body) {
         return given(baseRequestSpec)
                 .body(body)
@@ -32,6 +33,7 @@ public class UsersApiClient {
                 .as(ExistingUserResponseModel.class);
     }
 
+    @Step("Зарегистрировать пользователя без password")
     public RegistrationPasswordErrorResponseModel registrationWithoutPassword(RegistrationBodyModel body) {
         return given(baseRequestSpec)
                 .body(body)
@@ -43,6 +45,7 @@ public class UsersApiClient {
                 .as(RegistrationPasswordErrorResponseModel.class);
     }
 
+    @Step("Зарегистрировать пользователя без username")
     public RegistrationWithoutUserNameResponseModel registrationWithoutUserName(RegistrationBodyModel body) {
         return given(baseRequestSpec)
                 .body(body)
@@ -54,6 +57,7 @@ public class UsersApiClient {
                 .as(RegistrationWithoutUserNameResponseModel.class);
     }
 
+    @Step("Зарегистрировать пользователя без username и password")
     public RegistrationWithoutUsernameAndPasswordResponseModel registrationWithoutUsernameAndPassword(
             RegistrationBodyModel body) {
         return given(baseRequestSpec)
@@ -66,6 +70,7 @@ public class UsersApiClient {
                 .as(RegistrationWithoutUsernameAndPasswordResponseModel.class);
     }
 
+    @Step("Зарегистрировать пользователя с password длиннее 128 символов")
     public RegistrationPasswordErrorResponseModel registrationWithLongPassword(RegistrationBodyModel body) {
         return given(baseRequestSpec)
                 .body(body)
