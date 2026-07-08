@@ -30,9 +30,10 @@ public class UpdateUserTests extends TestBase {
     @Story("Успешное обновление профиля")
     @DisplayName("Пользователь может успешно обновить профиль")
     public void successfulUpdateUserTest() {
-        RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
-        api.users.register(registrationData);
+        api.users.register(new RegistrationBodyModel(
+                registeredUserData.username,
+                registeredUserData.password
+        ));
 
         LoginBodyModel loginData =
                 new LoginBodyModel(registeredUserData.username, registeredUserData.password);
@@ -62,9 +63,10 @@ public class UpdateUserTests extends TestBase {
     @Story("Валидация обязательных полей")
     @DisplayName("Обновление профиля только с username возвращает ошибки firstName, lastName и email")
     public void updateUserOnlyWithUsernameTest() {
-        RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
-        api.users.register(registrationData);
+        api.users.register(new RegistrationBodyModel(
+                registeredUserData.username,
+                registeredUserData.password
+        ));
 
         LoginBodyModel loginData =
                 new LoginBodyModel(registeredUserData.username, registeredUserData.password);
@@ -88,9 +90,10 @@ public class UpdateUserTests extends TestBase {
     @Story("Валидация обязательных полей")
     @DisplayName("Обновление профиля с пустым JSON возвращает ошибки всех обязательных полей")
     public void updateUserWithoutAllRequiredFieldsTest() {
-        RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
-        api.users.register(registrationData);
+        api.users.register(new RegistrationBodyModel(
+                registeredUserData.username,
+                registeredUserData.password
+        ));
 
         LoginBodyModel loginData =
                 new LoginBodyModel(registeredUserData.username, registeredUserData.password);
@@ -114,9 +117,10 @@ public class UpdateUserTests extends TestBase {
     @Story("Успешное частичное обновление профиля")
     @DisplayName("PATCH обновляет username пользователя")
     public void patchUserNameTest() {
-        RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
-        api.users.register(registrationData);
+        api.users.register(new RegistrationBodyModel(
+                registeredUserData.username,
+                registeredUserData.password
+        ));
 
         LoginBodyModel loginData =
                 new LoginBodyModel(registeredUserData.username, registeredUserData.password);
@@ -138,9 +142,10 @@ public class UpdateUserTests extends TestBase {
     @Story("Валидация пустых значений")
     @DisplayName("PATCH профиля с пустым username возвращает ошибку")
     public void patchUserWithEmptyFieldsTest() {
-        RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(registeredUserData.username, registeredUserData.password);
-        api.users.register(registrationData);
+        api.users.register(new RegistrationBodyModel(
+                registeredUserData.username,
+                registeredUserData.password
+        ));
 
         LoginBodyModel loginData =
                 new LoginBodyModel(registeredUserData.username, registeredUserData.password);

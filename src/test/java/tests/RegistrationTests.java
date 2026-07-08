@@ -23,10 +23,8 @@ public class RegistrationTests extends TestBase {
     @Test
     @DisplayName("Успешная регистрация нового пользователя")
     public void successfulRegistrationTest() {
-        RegistrationBodyModel registrationData = new RegistrationBodyModel(userData.username, userData.password);
-
         SuccessfulRegistrationResponseModel registrationResponse =
-                api.users.register(registrationData);
+                api.users.register(new RegistrationBodyModel(userData.username, userData.password));
 
         assertThat(registrationResponse.id()).isGreaterThan(0);
         assertThat(registrationResponse.username()).isEqualTo(userData.username);
@@ -58,10 +56,8 @@ public class RegistrationTests extends TestBase {
     @Test
     @DisplayName("Регистрация без password возвращает ошибку в поле password")
     public void registrationWithoutPasswordTest() {
-        RegistrationBodyModel registrationData = new RegistrationBodyModel(userData.username, "");
-
         RegistrationPasswordErrorResponseModel registrationWithoutPassword =
-                api.users.registrationWithoutPassword(registrationData);
+                api.users.registrationWithoutPassword(new RegistrationBodyModel(userData.username, ""));
 
         String expectedDetailError = EMPTY_CREDENTIALS_ERROR;
         String actualDetailError = registrationWithoutPassword.password().get(0);
@@ -71,10 +67,8 @@ public class RegistrationTests extends TestBase {
     @Test
     @DisplayName("Регистрация без username возвращает ошибку в поле username")
     public void registrationWithoutUsernameTest() {
-        RegistrationBodyModel registrationData = new RegistrationBodyModel("", userData.password);
-
         RegistrationWithoutUserNameResponseModel registrationWithoutUserName =
-                api.users.registrationWithoutUserName(registrationData);
+                api.users.registrationWithoutUserName(new RegistrationBodyModel("", userData.password));
         String expectedDetailError = EMPTY_CREDENTIALS_ERROR;
         String actualDetailError = registrationWithoutUserName.username().get(0);
         assertThat(actualDetailError).isEqualTo(expectedDetailError);
@@ -83,10 +77,8 @@ public class RegistrationTests extends TestBase {
     @Test
     @DisplayName("Регистрация без username и password возвращает две ошибки")
     public void registrationWithoutUsernameAndPasswordTest() {
-        RegistrationBodyModel registrationData = new RegistrationBodyModel("", "");
-
         RegistrationWithoutUsernameAndPasswordResponseModel response =
-                api.users.registrationWithoutUsernameAndPassword(registrationData);
+                api.users.registrationWithoutUsernameAndPassword(new RegistrationBodyModel("", ""));
 
         assertThat(response.username()).containsExactly(EMPTY_CREDENTIALS_ERROR);
         assertThat(response.password()).containsExactly(EMPTY_CREDENTIALS_ERROR);
@@ -95,11 +87,9 @@ public class RegistrationTests extends TestBase {
     @Test
     @DisplayName("Регистрация с password длиннее 128 символов возвращает ошибку")
     public void registrationWithLongPasswordTest() {
-        RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(userData.username, userData.longPassword);
-
         RegistrationPasswordErrorResponseModel response =
-                api.users.registrationWithLongPassword(registrationData);
+                api.users.registrationWithLongPassword(
+                        new RegistrationBodyModel(userData.username, userData.longPassword));
 
         assertThat(response.password()).containsExactly(LONG_PASSWORD_ERROR);
     }
@@ -107,10 +97,8 @@ public class RegistrationTests extends TestBase {
     @Test
     @DisplayName("Регистрация с null в username и password возвращает две ошибки")
     public void registrationWithNullUsernameAndPasswordTest() {
-        RegistrationBodyModel registrationData = new RegistrationBodyModel(null, null);
-
         RegistrationWithoutUsernameAndPasswordResponseModel response =
-                api.users.registrationWithoutUsernameAndPassword(registrationData);
+                api.users.registrationWithoutUsernameAndPassword(new RegistrationBodyModel(null, null));
 
         assertThat(response.username()).containsExactly(NULL_CREDENTIALS_ERROR);
         assertThat(response.password()).containsExactly(NULL_CREDENTIALS_ERROR);

@@ -30,9 +30,7 @@ public class LogoutTests extends TestBase {
     @Story("Успешный logout")
     @DisplayName("Успешный logout с refresh token")
     public void successfulLogoutTest() {
-        RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(userData.username, userData.password);
-        api.users.register(registrationData);
+        api.users.register(new RegistrationBodyModel(userData.username, userData.password));
 
         LoginBodyModel loginData =
                 new LoginBodyModel(userData.username, userData.password);
@@ -75,9 +73,7 @@ public class LogoutTests extends TestBase {
     @Story("Негативный кейс на logout")
     @DisplayName("Logout с access token вместо refresh token возвращает ошибку")
     public void logoutWithAccessTokenTest() {
-        RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(userData.username, userData.password);
-        api.users.register(registrationData);
+        api.users.register(new RegistrationBodyModel(userData.username, userData.password));
 
         LoginBodyModel loginData =
                 new LoginBodyModel(userData.username, userData.password);

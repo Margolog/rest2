@@ -30,9 +30,7 @@ public class ClubsTests extends TestBase {
     @Test
     @DisplayName("Успешное создание клуба возвращает данные созданного клуба")
     public void successfulCreateClubTest() {
-        RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(userData.username, userData.password);
-        api.users.register(registrationData);
+        api.users.register(new RegistrationBodyModel(userData.username, userData.password));
 
         LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
         String accessToken = api.auth.loginAndGetAccessToken(loginData);
@@ -63,9 +61,7 @@ public class ClubsTests extends TestBase {
     @Test
     @DisplayName("Получение списка клубов возвращает созданный клуб")
     public void successfulGetClubsTest() {
-        RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(userData.username, userData.password);
-        api.users.register(registrationData);
+        api.users.register(new RegistrationBodyModel(userData.username, userData.password));
 
         LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
         String accessToken = api.auth.loginAndGetAccessToken(loginData);
@@ -96,10 +92,7 @@ public class ClubsTests extends TestBase {
     @Test
     @DisplayName("Обновление названия книги")
     public void changeBookTitleTest() {
-        RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(userData.username, userData.password);
-
-        api.users.register(registrationData);
+        api.users.register(new RegistrationBodyModel(userData.username, userData.password));
 
         LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
         String accessToken = api.auth.loginAndGetAccessToken(loginData);
@@ -134,10 +127,7 @@ public class ClubsTests extends TestBase {
     @Test
     @DisplayName("Удаление клуба")
     public void deleteClubTest() {
-        RegistrationBodyModel registrationData =
-                new RegistrationBodyModel(userData.username, userData.password);
-
-        api.users.register(registrationData);
+        api.users.register(new RegistrationBodyModel(userData.username, userData.password));
 
         LoginBodyModel loginData = new LoginBodyModel(userData.username, userData.password);
         String accessToken = api.auth.loginAndGetAccessToken(loginData);
